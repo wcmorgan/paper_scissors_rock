@@ -88,5 +88,5 @@ function reloadPage() {  //creates a reload button when game is over
     btn.onclick = function () {
         location.reload();
     };
-document.body.appendChild(btn);
+    document.body.appendChild(btn);
 };
