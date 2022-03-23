@@ -1,82 +1,92 @@
-//only have JS script in this file, no use of HTML or CSS
+const computerDisplay = document.getElementById('computer-choice');
+const userDisplay = document.getElementById('user-choice');
+const outcomeDisplay = document.getElementById('outcome');
+const playerChoices = document.querySelectorAll('button');
+const computerScore = document.getElementById('loss');
+const playerScore = document.getElementById('win');
+const drawScore = document.getElementById('draw');
+const finalScore = document.getElementById('winner');
 
-//let playerSelection = prompt('Please enter paper, scissors or rock').toLowerCase(); //WORKS BUT... THROWING ERROR AT Esc/Cancel 
+let playerSelection;
+let computerSelection;
+let outcome;
+let winner;
 
-function playerSelection() { 
-    let response = prompt('Please enter paper, scissors or rock');
-    if (response === null || response === "") { // added to avoid getting a TypeError on not reading null when Cncel or Esc are entered
-        return playerSelection();
-    }
-    return response.toLowerCase();
-}
-//console.log(playerSelection());
+playerChoices.forEach(playerchoice => playerchoice.addEventListener('click', (e) => {
+  playerSelection = e.target.id;
+  userDisplay.innerHTML = playerSelection;
+  computerChoice();
+  playRound();
+  game();
+})); 
 
 function computerPlay(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min; //works-gets rounded random numbers
+    return Math.floor(Math.random() * (max - min + 1)) + min; //gets rounded random numbers
 }
-//let result = computerPlay(1, 3); //works but moved to next function and making a constant
-//console.log(computerPlay());
 
-function computerSelection() { //works, converts random numbers (1-3) to strings needed to play
-    const result = computerPlay(1, 3); //works, sets min at 1 and max at 3 for computerPlay function
+function computerChoice() { //converts random numbers (1-3) to strings needed to play
+    const result = computerPlay(1, 3); //sets min at 1 and max at 3 for computerPlay function
     if (result === 1) {
-        return ('paper'); 
+        computerSelection = 'Paper'; 
     } else if (result === 2) {
-        return ('scissors');
+        computerSelection = 'Scissors';
     } else {
-        return ('rock')
+        computerSelection = 'Rock';
     }
+    computerDisplay.innerHTML = computerSelection;
 }
-//console.log(computerSelection());
 
-let win = 0; //tried to set these inside playRound but they needed to be global so moved here
+let win = 0; 
 let loss = 0;
 let draw = 0;
 
-function playRound(playerSelection, computerSelection) { //works
-    if (playerSelection === 'paper' && computerSelection === 'rock') {
-        win = win + 1; //added to give count of wins/losses/draws as game progressed
-        return 'You win, paper covers rock!';
-    } else if (playerSelection === 'paper' && computerSelection === 'scissors') {
+function playRound() { 
+    if (playerSelection === computerSelection) {
+        draw = draw + 1; //added to give count of wins/losses/draws as game progresses
+        outcome = 'Draw!';
+    } else if (playerSelection === 'Paper' && computerSelection === 'Rock') {
+        win = win + 1; 
+        outcome = 'You win, paper covers rock!';
+    } else if (playerSelection === 'Paper' && computerSelection === 'Scissors') {
         loss = loss + 1;
-        return 'You lose, scissors cut paper!';
-    } else if (playerSelection === 'paper' && computerSelection === 'paper') {
-        draw = draw + 1;
-        return 'Draw!';
-    } else if (playerSelection === 'scissors' && computerSelection === 'paper') {
+        outcome = 'You lose, scissors cut paper!';
+    } else if (playerSelection === 'Scissors' && computerSelection === 'Paper') {
         win = win + 1;
-        return 'You win, scissors cut paper!';
-    } else if (playerSelection === 'scissors' && computerSelection === 'rock') {
+        outcome = 'You win, scissors cut paper!';
+    } else if (playerSelection === 'Scissors' && computerSelection === 'Rock') {
         loss = loss + 1;
-        return 'You lose, rock breaks scissors!';
-    } else if (playerSelection === 'scissors' && computerSelection === 'scissors') {
-        draw = draw + 1;
-        return 'Draw!';
-    } else if (playerSelection === 'rock' && computerSelection === 'scissors') {
+        outcome = 'You lose, rock breaks scissors!';
+    } else if (playerSelection === 'Rock' && computerSelection === 'Scissors') {
         win = win + 1;
-        return 'You win, rock breaks scissors!';
-    } else if (playerSelection === 'rock' && computerSelection === 'paper' ) {
+        outcome = 'You win, rock breaks scissors!';
+    } else if (playerSelection === 'Rock' && computerSelection === 'Paper' ) {
         loss = loss + 1;
-        return 'You lose, paper covers rock!';
-    } else if (playerSelection === 'rock' && computerSelection === 'rock') {
-        draw = draw + 1;
-        return 'Draw!';
-    } else { //this covers text entries other than requested text
-        return 'Entry not understood, no winner of round';
+        outcome = 'You lose, paper covers rock!';
     }
+    outcomeDisplay.innerHTML = outcome;
+    computerScore.innerHTML = loss;
+    playerScore.innerHTML = win;
+    drawScore.innerHTML = draw;
 }
 
-function game() { //works
-    for (i = 0; i < 5; i++) { //loop that runs playRound 5 times (still not 100% why "i" is not used out side this)
-        console.log(playRound(playerSelection(), computerSelection())); 
-    }
-    if (win > loss && win >= draw) { //if/else if statement: announces final overall win of 5 games and gives tally
-        return (`You win the game! Wins: ${win}, losses: ${loss}, draws: ${draw}.`);
-    } else if (win < loss && loss >= draw) { //in win/loss battles, draws are not counted unless draws outnumber either (w:2, l:1, D:2-round is won, w:1, l:2, D:2-round is lost,)
-        return (`You lose the game! Wins: ${win}, losses: ${loss}, draws: ${draw}.`);
+function game() { 
+    if (loss === 5) {
+       winner = 'Computer wins, GAME OVER!';
+       reloadPage();
+    } else if (win === 5) {
+        winner = 'User wins, GAME OVER!';
+        reloadPage();
     } else {
-        return (`Game is a draw! Wins: ${win}, losses: ${loss}, draws: ${draw}.`);
-    } 
+        winner = 'First to 5 wins, keep playing!';
+    }
+    finalScore.innerHTML = winner;
 }
 
-console.log(game());
+function reloadPage() {  //creates a reload button when game is over
+    let btn = document.createElement("button");
+    btn.innerHTML = "Reload Page";
+    btn.onclick = function () {
+        location.reload();
+    };
+document.body.appendChild(btn);
+};

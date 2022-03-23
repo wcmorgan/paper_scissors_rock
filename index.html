@@ -6,6 +6,25 @@
     </head>
 
     <body>
-        <script src="psr_game.js"></script> <!--I get varied results on where this goes (head v body)-->
+        <h3> Let's Play Paper Scissors Rock! </h3>
+  
+        <p>Please click on your selection:</p>
+
+        <button id = "Paper">Paper</button>
+        <button id = "Scissors">Scissors</button>
+        <button id = "Rock">Rock</button>
+
+        <p style = "font-size: 24px;">Computer Choice: <span id = "computer-choice"></span></p>
+        <p style = "font-size: 24px;">User Choice: <span id = "user-choice"></span></p>
+        <p style = "font-size: 24px; color: blue;">Round Outcome: <span id = "outcome"></span></p>
+
+        <u style = "font-size: 24px;">Running Score:</u>
+        <p style = "font-size: 24px;">Computer: <span id = "loss"></span></p>
+        <p style = "font-size: 24px;">User: <span id = "win"></span></p>
+        <p style = "font-size: 24px;">Draw: <span id = "draw"></span></p>
+        <p style = "font-size: 24px; color: red;">Game Outcome: <span id = "winner"></span></p>
+
+        <script src="psr_game.js"></script> <!--keep at bottom of body-->
+
     </body>
 </html>
